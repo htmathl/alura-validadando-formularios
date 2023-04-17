@@ -1,8 +1,19 @@
 export default function ehUmCPF(campo) {
     const cpf = campo.value.replace(/\.|-/g, "");
-    validarPrimeitoDigito(cpf)
-    console.log(validaNumerosRepetidos(cpf))
+    // if(validaNumerosMenorQueOnze(cpf)) {
+    //     campo.setCustomValidity('Muitos números, inviável');
+    //     return;
+    // }
+    if(validaNumerosRepetidos(cpf) || validarPrimeitoDigito(cpf) || validarSegundoDigito(cpf)) {
+        campo.setCustomValidity('Esse CPF não existe!');
+        return;
+    }
+    console.log('Existe!');
 }
+
+// function validaNumerosMenorQueOnze(cpf) {
+//     return cpf.split('').length > 11 && !Number.isNaN(cpf);
+// }
 
 function validaNumerosRepetidos(cpf) {
     const numerosRepetidos = [ 
@@ -25,7 +36,7 @@ function validarPrimeitoDigito(cpf) {
     let soma = 0;
     let multiplicador = 10;
 
-    for(let tam = 0; tam < 9; tamanho++) {
+    for(let tam = 0; tam < 9; tam++) {
         soma += cpf[tam] * multiplicador;
         multiplicador --;
     }
@@ -34,5 +45,21 @@ function validarPrimeitoDigito(cpf) {
 
     if(soma === 10 || soma === 1)soma = 0;
 
-    return soma !== cpf[9];
+    return soma != cpf[9];
+}
+
+function validarSegundoDigito(cpf) {
+    let soma = 0;
+    let multiplicador = 11;
+
+    for(let tam = 0; tam < 10; tam++) {
+        soma += cpf[tam] * multiplicador;
+        multiplicador --;
+    }
+
+    soma = (soma * 10) % 11;
+
+    if(soma === 10 || soma === 1) soma = 0;
+
+    return soma != cpf[10];
 }
